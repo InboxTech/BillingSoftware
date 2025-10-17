@@ -1,0 +1,37 @@
+{
+  "name": "billing-app",
+  "version": "1.0.0",
+  "description": "Billing software",
+  "author": "InboxInfotech",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:clean": "rimraf dist",
+    "dist": "npm run dist:clean && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^38.2.2",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "rimraf": "^6.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "build": {
+    "appId": "com.billingapp",
+    "productName": "Billing Software",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
