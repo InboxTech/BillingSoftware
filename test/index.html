@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radhe Corporation Billing Software</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Radhe Corporation Billing Software</h1>
+        
+        <div class="d-flex">
+            <!-- Input Form -->
+            <div class="form-section">
+                <h2>Enter Bill Details</h2>
+                <form id="billForm">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Invoice No:</label>
+                            <input class="form-control" type="text" id="invoiceNo" value="031" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Date:</label>
+                            <input class="form-control" type="date" id="date" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="form-label">Consignee:</label>
+                            <input class="form-control" type="text" id="consignee" value="Smarth Construction" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="form-label">Address:</label>
+                            <textarea class="form-control" id="address" rows="3" oninput="updatePreview()">A-101, Windsor Plaza, R.C. Dutt Road, Alkapuri, Vadodara-390007</textarea>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">GSTIN:</label>
+                            <input class="form-control" type="text" id="gstin" value="24ACDPH6794C1ZT" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">CST TIN No.:</label>
+                            <input class="form-control" type="text" id="cstTin" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label">TIN ST No.:</label>
+                            <input class="form-control" type="text" id="tinSt" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label">State Code:</label>
+                            <input class="form-control" type="text" id="stateCode" value="24" oninput="updatePreview()">
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label">P.O. No.:</label>
+                            <input class="form-control" type="text" id="poNo" oninput="updatePreview()">
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <h3>Items</h3>
+                        <div id="items">
+                            <div class="item row">
+                                <div class="">
+                                    <label class="form-label">Sr No: 1</label>
+                                    <input type="hidden" class="srNo form-control" value="1" oninput="updatePreview()">
+                                </div>
+                                <div class="">
+                                    <label class="form-label">Item Description:</label>
+                                    <input type="text" class="itemDesc form-control" value="BRICKS" oninput="updatePreview()">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">HSN Code:</label>
+                                    <input type="text" class="hsn form-control" value="69041000" oninput="updatePreview()">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Qty (Nos/Set):</label>
+                                    <input type="number" class="qty form-control" value="" oninput="updatePreview(); calculateTotals()">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Rate (Nos/Set):</label>
+                                    <input type="number" class="rate form-control" value="" step="0.01" oninput="updatePreview(); calculateTotals()">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Total (Rs):</label>
+                                    <input type="number" class="total form-control" readonly>
+                                </div>
+                                <button class="mt-3 btn text-white" type="button" onclick="removeItem(this)">Remove</button>
+                            </div>
+                        </div>
+                        <button class="btn text-white" type="button" onclick="addItem()">Add Item</button>
+                    </div>
+                    
+                    <div class="">
+                        <label class="form-label">Other Charges:</label>
+                        <input class="form-control" type="number" id="otherCharges" value="0" step="0.01" oninput="updatePreview(); calculateTotals()">
+                    </div>
+                    <div class="">
+                        <label class="form-label">Total Amount:</label>
+                        <input class="form-control" type="number" id="totalAmount" readonly><br>
+                    </div>
+                    
+                    <div class="card p-3 mb-3">
+                        <div class="row">
+                            <h3>Taxes</h3>
+                            <div class="col-4">
+                                <label class="form-label">CGST @ %:</label>
+                                <input class="form-control" type="number" id="cgstRate" value="0" step="0.01" oninput="updatePreview(); calculateTotals()">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">SGST @ %:</label>
+                                <input class="form-control" type="number" id="sgstRate" value="0" step="0.01" oninput="updatePreview(); calculateTotals()">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">IGST @ %:</label>
+                                <input class="form-control" type="number" id="igstRate" value="0" step="0.01" oninput="updatePreview(); calculateTotals()">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Grand Total:</label>
+                                <input class="form-control" type="number" id="grandTotal" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Amount in Words:</label><br>
+                                <span  id="amountWords"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-3">
+                        <h3>Bank Details</h3>
+                        <div class="row">
+                            <div class="">
+                                <label class="form-label">Bank Name:</label>
+                                <input class="form-control" type="text" id="bankName" value="Union Bank of India" oninput="updatePreview()">
+                            </div>
+                            <div class="">
+                                <label class="form-label">Account Number:</label>
+                                <input class="form-control" type="text" id="accountNo" value="38110508000123" oninput="updatePreview()">
+                            </div>
+                            <div>
+                                <label class="form-label">Branch:</label>
+                                <input class="form-control" type="text" id="branch" value="PROF. MANEKRAO ROAD, RAOPURA" oninput="updatePreview()">
+                            </div>
+                            <div>
+                                <label class="form-label">IFSC No.:</label>
+                                <input class="form-control" type="text" id="ifsc" value="UBIN0538116" oninput="updatePreview()">
+                            </div>
+
+                            <div class="">
+                                <label class="form-label">GST No.:</label>
+                                <input class="form-control" type="text" id="gstNo" value="24AOHPP88920M1ZU" oninput="updatePreview()">
+                            </div>
+                            <div class="">
+                                <label class="form-label">PAN No.:</label>
+                                <input class="form-control" type="text" id="panNo" value="AOHPP88920M" oninput="updatePreview()">
+                            </div>
+                            <div class="">
+                                <label class="form-label">HSN/SAC:</label>
+                                <input class="form-control" type="text" id="hsnSac" value="Taxable Value" oninput="updatePreview()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="button" onclick="generatePDF()">Generate & Save PDF</button>
+                        <button type="button" onclick="printBill()">Print Bill</button>
+                        <button type="button" onclick="saveBill()">Save Bill</button>
+                    </div>
+                </form>
+                
+                <h2>Search Saved Bills</h2>
+                <label>Search by Invoice No:</label><input type="text" id="searchInvoiceNo"><br>
+                <button type="button" onclick="searchBill()">Search</button>
+                <div id="searchResult"></div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <h2>Live Preview</h2>
+                <div id="billPreview" class="bill">
+                    <!-- Header -->
+                    <div class="invoice-title">TAX INVOICE</div>
+                    <div class="original">Original: White</div>
+                    <div class="duplicate">Duplicate: Pink</div>
+                    <div class="triplicate">Triplicate: Green</div>
+    
+                    <div class="header">
+                        <div class="logo">RADHE</div>
+                        <div class="title">
+                            <h2>RADHE CORPORATION</h2>
+                            <p>MANUFACTURER & SUPPLIER OF QUALITY BRICKS</p>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="contact">Siddheshwar Patheshwar, Ajabdi Mill Road, Warasia Road, Warasia, Vadodara 390 001. <strong>M: 88662 01443</strong></div>
+                    
+                    <!-- Consignee Details -->
+                    <div class="top-content">
+                        <div class="consignee">
+                            <span class="red-lebal">Consignee:</span> <span id="prevConsignee"></span><br>
+                            <span id="prevAddress"></span><br>
+                        </div>
+                        <div class="invoice-no">
+                            <span class="red-lebal"></span>Invoice No. <span id="prevInvoiceNo"></span> <span class="red-lebal"></span>Dt. <span id="prevDate"></span><br> 
+                            <span class="red-lebal"></span>P.O. No. <span id="prevPoNo"></span> <br> <span class="red-lebal"></span>State Code: <span id="prevStateCode"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <span class="red-lebal">GSTIN:</span> <span id="prevGstin"></span>
+                            <span class="red-lebal">CST TIN No.:</span> <span id="prevCstTin"></span><br>
+                            <span class="red-lebal">TIN ST No.:</span> <span id="prevTinSt"></span>
+                        </div>
+                        <span class="red-lebal">Service Tax No.:</span> <span id="prevServiceTax"></span>
+                        <span class="red-lebal"> PAN No.:</span> <span id="prevPan"></span>
+                    </div>
+                    
+                    <!-- Items Table -->
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th>Item Description</th>
+                                <th>HSN Code</th>
+                                <th>Qty (Nos/Set)</th>
+                                <th>Rate (Nos/Set)</th>
+                                <th>Total Amount (Rs)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="prevItems"></tbody>
+                    </table>
+                    
+                    <!-- Charges and Totals -->
+                    <div class="charges">
+                        Other Charges: <span id="prevOtherCharges"></span><br>
+                        Total Amount: <span id="prevTotalAmount"></span>
+                    </div>
+                    <div class="taxes">
+                        Central Tax: <span id="prevCgst"></span><br>
+                        State Tax: <span id="prevSgst"></span><br>
+                        IGST: <span id="prevIgst"></span>
+                    </div>
+                    <div class="grand-total">
+                        Grand Total Payable Amount: <span id="prevGrandTotal"></span><br>
+                        <span class="red-lebal">Amount in words:</span> <span id="prevAmountWords"></span>
+                    </div>
+                    
+                    <!-- Bank Details -->
+                    <div class="d-flex">
+                        <div class="bank">
+                            For Direct Bank Payment RTGS / NEFT<br>
+                            Bank Name: <span id="prevBankName"></span><br>
+                            Account Number: <span id="prevAccountNo"></span><br>
+                            Branch: <span id="prevBranch"></span><br>
+                            IFSC No.: <span id="prevIfsc"></span>
+                        </div>
+                        <div class="note">
+                            We hereby certify that our registration certificate under the Gujarat value added tax act 2003 is in force on the date on which the sale of the goods specified in this "Tax invoice" is made by me/us and this the transaction of sale covered by this "Tax invoice" has been effected by me/us and it shall be accounted for in the turn over of the sales while filing return and the due tax if any payable on the sales has been paid or shall be paid.
+                        </div>
+                    </div>
+                    
+                    <!-- Terms -->
+                    <div class="terms">
+                        TERMS & CONDITIONS:<br>
+                        1. Goods once sold are not accepted back.<br>
+                        2. Interest @ 24% p.a. will be charged if payment not made within 7 days of receipt of goods.<br>
+                        3. All disputes subject to the Vadodara Jurisdiction.
+                    </div>
+                    
+                    <!-- Signature -->
+                    <div class="signature">
+                        For RADHE CORPORATION<br>
+                        Authorised Signatory
+                    </div>
+                    
+                    <div class="gst-details">
+                        GST No.: <span id="prevGstNo"></span><br>
+                        PAN No.: <span id="prevPanNo"></span><br>
+                        HSN / SAC : <span id="prevHsnSac"></span><br>
+                        Taxable Value Central Tax State Tax
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>
